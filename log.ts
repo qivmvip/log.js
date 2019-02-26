@@ -9,6 +9,7 @@
 
 
 export interface LogOutput {
+  vrb(msg: string, ...opt: any[]): void;
   dbg(msg: string, ...opt: any[]): void;
   inf(msg: string, ...opt: any[]): void;
   wrn(msg: string, ...opt: any[]): void;
@@ -17,6 +18,9 @@ export interface LogOutput {
 }
 
 class ConsoleOutput implements LogOutput {
+  vrb(msg: string, ...opt: any[]): void {
+    console.log(msg, ...opt);
+  }
   dbg(msg: string, ...opt: any[]): void {
     console.log(msg, ...opt);
   }
@@ -39,6 +43,7 @@ export class Log {
     throw new Error("Log is a utility class");
   }
 
+  static readonly LEVEL_VRB = -2;
   static readonly LEVEL_DBG = -1;
   static readonly LEVEL_INF = 0;
   static readonly LEVEL_WRN = 1;
@@ -147,6 +152,9 @@ export class Log {
     Log._hasTag = false;
   }
 
+  static vrb(tag: string, msg?: any, ...opt: any[]): void {
+    Log.write(Log.LEVEL_VRB, tag, msg, ...opt);
+  }
   static dbg(tag: string, msg?: any, ...opt: any[]): void {
     Log.write(Log.LEVEL_DBG, tag, msg, ...opt);
   }
@@ -206,7 +214,7 @@ export class Log {
       head += tag;
     }
     if ("" != head) {
-      head = "[ " + head + " ] ";
+      head = "[" + head + "]";
     }
     return head;
   }
@@ -237,6 +245,8 @@ export class Log {
 
   private static buildLevel(level: number): string {
     switch (level) {
+      case Log.LEVEL_VRB:
+        return "VRB";
       case Log.LEVEL_DBG:
         return "DBG";
       case Log.LEVEL_INF:
@@ -254,11 +264,14 @@ export class Log {
 
   private static writeMessage(level: number, s: string, ...opt: any[]): void {
     switch (level) {
+      case Log.LEVEL_VRB:
+        Log._output.vrb(s, ...opt);
+      break;
       case Log.LEVEL_DBG:
         Log._output.dbg(s, ...opt);
         break;
       case Log.LEVEL_INF:
-          Log._output.inf(s, ...opt);
+        Log._output.inf(s, ...opt);
         break;
       case Log.LEVEL_WRN:
         Log._output.wrn(s, ...opt);
