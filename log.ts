@@ -181,7 +181,7 @@ export class Log {
     if (Log._filterLevel > level) {
       return;
     }
-    if (Log.FILTER_TAG_ALL != Log._filterTag && tag != Log._filterTag) {
+    if (Log.FILTER_TAG_ALL !== Log._filterTag && tag !== Log._filterTag) {
       return;
     }
     const head = Log.buildHead(level, tag);
@@ -202,18 +202,18 @@ export class Log {
       head += Log.buildDate();
     }
     if (Log._hasLevel) {
-      if ("" != head) {
+      if ("" !== head) {
         head += " | ";
       }
       head += Log.buildLevel(level);
     }
     if (Log._hasTag) {
-      if ("" != head) {
+      if ("" !== head) {
         head += " | ";
       }
       head += tag;
     }
-    if ("" != head) {
+    if ("" !== head) {
       head = "[" + head + "]";
     }
     return head;
